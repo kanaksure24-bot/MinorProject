@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Clothing CRUD Application</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:0;
+padding:40px;
+
+/* Clothes poster background */
+background-image:url("https://images.unsplash.com/photo-1445205170230-053b83016050");
+background-size:cover;
+background-repeat:no-repeat;
+background-position:center;
+
+animation:bgmove 20s infinite alternate;
+}
+
+/* background animation */
+@keyframes bgmove{
+0%{background-position:center;}
+50%{background-position:top;}
+100%{background-position:bottom;}
+}
+
+h1{
+text-align:center;
+color:white;
+font-size:34px;
+letter-spacing:2px;
+margin-bottom:25px;
+}
+
+/* container now has no box color */
+.container{
+width:750px;
+margin:auto;
+padding:30px;
+}
+
+/* input layout */
+.input-area{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:15px;
+margin-top:10px;
+margin-bottom:15px;
+}
+
+input{
+padding:10px;
+width:180px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+#search{
+width:300px;
+display:block;
+margin:0 auto 15px auto;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+cursor:pointer;
+border:none;
+border-radius:6px;
+background:#333;
+color:white;
+}
+
+button:hover{
+background:#555;
+}
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+background:rgba(255,255,255,0.9);
+}
+
+table, th, td{
+border:1px solid #ccc;
+}
+
+th{
+background:#f5f5f5;
+}
+
+th, td{
+padding:10px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AK Threads</h1>
+
+<input type="text" id="search" placeholder="Search clothing item" onkeyup="searchItem()">
+
+<div class="input-area">
+
+<input type="text" id="name" placeholder="Clothing Name">
+<input type="text" id="type" placeholder="Type (Shirt, Jeans)">
+<input type="text" id="price" placeholder="Price">
+
+<button onclick="addItem()">Add Item</button>
+
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Price</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="clothingTable"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+let clothes = [];
+
+function addItem(){
+
+let name=document.getElementById("name").value;
+let type=document.getElementById("type").value;
+let price=document.getElementById("price").value;
+
+if(name=="" || type=="" || price==""){
+alert("Please fill all fields");
+return;
+}
+
+let item={
+name:name,
+type:type,
+price:price
+};
+
+clothes.push(item);
+
+displayItems(clothes);
+
+clearFields();
+}
+
+function displayItems(list){
+
+let table=document.getElementById("clothingTable");
+table.innerHTML="";
+
+list.forEach((item,index)=>{
+
+table.innerHTML+=`
+
+<tr>
+<td>${item.name}</td>
+<td>${item.type}</td>
+<td>${item.price}</td>
+
+<td>
+<button onclick="editItem(${index})">Edit</button>
+<button onclick="deleteItem(${index})">Delete</button>
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+function editItem(index){
+
+let item=clothes[index];
+
+document.getElementById("name").value=item.name;
+document.getElementById("type").value=item.type;
+document.getElementById("price").value=item.price;
+
+clothes.splice(index,1);
+
+displayItems(clothes);
+
+}
+
+function deleteItem(index){
+
+clothes.splice(index,1);
+
+displayItems(clothes);
+
+}
+
+function searchItem(){
+
+let keyword=document.getElementById("search").value.toLowerCase();
+
+let filtered=clothes.filter(item =>
+item.name.toLowerCase().includes(keyword)
+);
+
+displayItems(filtered);
+
+}
+
+function clearFields(){
+
+document.getElementById("name").value="";
+document.getElementById("type").value="";
+document.getElementById("price").value="";
+
+}
+
+</script>
+
+</body>
+</html>
